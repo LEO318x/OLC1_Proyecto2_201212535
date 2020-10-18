@@ -1,10 +1,12 @@
 /* Importaciones  */
 %{
-// CODIGO JS
-var lisErrorLexico = [];
-var lisErrorSintactico = [];
-var lisTokens[];
-var lisTraduccion[];
+let lisErrorLexico = [], lisErrorSintactico = [], lisTokens = [], lisTraduccion = [];
+exports.LimpiarListas = function(){
+        lisErrorLexico = [];
+        lisErrorSintactico = [];
+        lisTokens = [];
+        lisTraduccion = [];
+    }
 %}
 
 /* Analizador Lexico */
@@ -13,6 +15,9 @@ var lisTraduccion[];
 
 %%
 
+// Er. Espacios en blanco
+\s+                                 {  }
+
 /***************************************
 *                                      *
 *------------>COMENTARIOS<-------------*
@@ -20,30 +25,28 @@ var lisTraduccion[];
 ****************************************/
 
 //Comentario Unilínea
-\/\/.* //{ return 'tk_comentario'; }
+"//".*  {}
 
 //Comentario Multilínea
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] //{ return 'tk_comentariomulti'; }
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {}
 
 /***************************************
 *                                      *
 *---------->EXP. REGULARES<------------*
 *                                      *
 ****************************************/
-
-
-// Er. Número decimal
-[0-9]+(\.[0-9]+)\b                  { return 'tk_decimal'; }
-
-// Er. Número entero
-[0-9]+\b                            { return 'tk_entero'; }
-
 // Er. Cadena Comilla Doble         
-\".*\"                              { return 'tk_cadena'}
+[\"][^\\\"]*([\\][\\\"ntr][^\\\"]*)*[\"]        { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_cadena', yytext]); return 'tk_cadena'}
 
 // Er. Cadena Comilla Simple
-\'.*\'                              { return 'tk_cadenasimple' }
-	      
+[\'][^\\\']*([\\][\\\'ntr][^\\\']*)*[']         { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_cadenasimple', yytext]); return 'tk_cadenasimple' }
+
+// Er. Número decimal
+[0-9]+(\.[0-9]+)\b                  { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_decimal', yytext]); return 'tk_decimal';}
+
+// Er. Número entero
+[0-9]+\b                            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_entero', yytext]); return 'tk_entero'; }
+     
 
 /***************************************
 *                                      *
@@ -51,31 +54,31 @@ var lisTraduccion[];
 *                                      *
 ****************************************/
 
-"public"            { return 'tk_public'; }
-"class"             { return 'tk_class'; }
-"interface"         { return 'tk_interface'; }
-"void"              { return 'tk_void'; }
-"main"              { return 'tk_main'; }
-"static"            { return 'tk_static'; }
-"for"               { return 'tk_for'; }
-"while"             { return 'tk_while'; }
-"do"                { return 'tk_do'; }
-"if"                { return 'tk_if'; }
-"else"              { return 'tk_else'; }
-"int"               { return 'tk_int'; }
-"boolean"           { return 'tk_boolean'; }
-"double"            { return 'tk_double'; }
-"String"            { return 'tk_String'; }
-"char"              { return 'tk_char'; }
-"true"              { return 'tk_true'; }
-"false"             { return 'tk_false'; }
-"break"             { return 'tk_break'; }
-"continue"          { return 'tk_continue'; }
-"return"            { return 'tk_return'; }
-"System"            { return 'tk_system'; }
-"out"               { return 'tk_out'; }
-"print"             { return 'tk_print'; }
-"println"           { return 'tk_println'; }
+"public"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_public', yytext]); return 'tk_public'; }
+"class"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_class', yytext]); return 'tk_class'; }
+"interface"         { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_interface', yytext]); return 'tk_interface'; }
+"void"              { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_void', yytext]); return 'tk_void'; }
+"main"              { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_main', yytext]); return 'tk_main'; }
+"static"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_static', yytext]); return 'tk_static'; }
+"for"               { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_for', yytext]); return 'tk_for'; }
+"while"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_while', yytext]); return 'tk_while'; }
+"do"                { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_do', yytext]); return 'tk_do'; }
+"if"                { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_if', yytext]); return 'tk_if'; }
+"else"              { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_else', yytext]); return 'tk_else'; }
+"int"               { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_int', yytext]); return 'tk_int'; }
+"boolean"           { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_boolean', yytext]); return 'tk_boolean'; }
+"double"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_double', yytext]); return 'tk_double'; }
+"String"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_String', yytext]); return 'tk_String'; }
+"char"              { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_char', yytext]); return 'tk_char'; }
+"true"              { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_true', yytext]); return 'tk_true'; }
+"false"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_false', yytext]); return 'tk_false'; }
+"break"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_break', yytext]); return 'tk_break'; }
+"continue"          { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_continue', yytext]); return 'tk_continue'; }
+"return"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_return', yytext]); return 'tk_return'; }
+"System"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_system', yytext]); return 'tk_system'; }
+"out"               { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_out', yytext]); return 'tk_out'; }
+"print"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_print', yytext]); return 'tk_print'; }
+"println"           { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_println', yytext]); return 'tk_println'; }
 
 
 /***************************************
@@ -85,42 +88,41 @@ var lisTraduccion[];
 ****************************************/
 
 // Símbolos de apertura y cerradura
-"("             { return 'tk_para'; }
-")"             { return 'tk_parc'; }
-"{"             { return 'tk_llaa'; }
-"}"             { return 'tk_llac'; }
-"["             { return 'tk_cora'; }
-"]"             { return 'tk_corc'; }
+"("             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_para', yytext]); return 'tk_para'; }
+")"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_parc', yytext]); return 'tk_parc'; }
+"{"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_llaa', yytext]); return 'tk_llaa'; }
+"}"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_llac', yytext]); return 'tk_llac'; }
+"["             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_cora', yytext]); return 'tk_cora'; }
+"]"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_corc', yytext]); return 'tk_corc'; }
 
 // Lógicos
-"&&"            { return 'tk_and'; }
-"||"            { return 'tk_or'; }
-"!"             { return 'tk_not'; }
-"^"             { return 'tk_xor'; }
+"&&"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_and', yytext]); return 'tk_and'; }
+"||"            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_or', yytext]); return 'tk_or'; }
+"^"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_xor', yytext]); return 'tk_xor'; }
 
 // Relacionales
-">="            { return 'tk_mayorigual'; }
-"<="            { return 'tk_menorigual'; }
-"=="            { return 'tk_dobleigual'; }
-"!="            { return 'tk_diferente'; }
-">"             { return 'tk_mayorq'; }
-"<"             { return 'tk_menorq'; }
+">="            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_mayorigual', yytext]); return 'tk_mayorigual'; }
+"<="            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_menorigual', yytext]); return 'tk_menorigual'; }
+"=="            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_dobleigual', yytext]); return 'tk_dobleigual'; }
+"!="            { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_diferente', yytext]); return 'tk_diferente'; }
+">"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_mayorq', yytext]); return 'tk_mayorq'; }
+"<"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_menorq', yytext]); return 'tk_menorq'; }
 
+// Lógicos
+"!"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_not', yytext]); return 'tk_not'; }
 
 // Operacionales
-"++"            { return 'tk_incremento'; }
-"--"            { return 'tk_decremento'; }
-"+"             { return 'tk_mas'; }
-"-"             { return 'tk_menos'; }
-"*"             { return 'tk_multi'; }
-"/"             { return 'tk_div'; }
+"+"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_mas', yytext]); return 'tk_mas'; }
+"-"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_menos', yytext]); return 'tk_menos'; }
+"*"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_multi', yytext]); return 'tk_multi'; }
+"/"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_div', yytext]); return 'tk_div'; }
 
 // Símbolos de separación
-"="             { return 'tk_igual'; }
-"."             { return 'tk_punto'; }
-","             { return 'tk_coma'; }
-":"             { return 'tk_dospuntos'; }
-";"             { return 'tk_puntocoma'; }
+"="             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_igual', yytext]); return 'tk_igual'; }
+"."             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_punto', yytext]); return 'tk_punto'; }
+","             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_coma', yytext]); return 'tk_coma'; }
+":"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_dospuntos', yytext]); return 'tk_dospuntos'; }
+";"             { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_puntocoma', yytext]); return 'tk_puntocoma'; }
 
 /***************************************
 *                                      *
@@ -130,10 +132,7 @@ var lisTraduccion[];
 
 
 // Er. Identificador
-([a-zA-Z_])[a-zA-Z0-9_]*            { return 'tk_identificador'; }
-
-// Er. Espacios en blanco
-\s+                                 {  }
+([a-zA-Z_])[a-zA-Z0-9_]*                        { lisTokens.push([yylloc.first_line, yylloc.first_column+1, 'tk_identificador', yytext]); return 'tk_identificador'; }
 
 
 //Fin del Archivo
@@ -142,9 +141,7 @@ var lisTraduccion[];
 
 // Error Lexico
 . {
-    lisErrorLexico.push(["Fila: "+yylloc.first_line, "Columna: "+yylloc.first_column, "Descripcion: "+yytext]); 
-    //console.log('Error Lexico token:' + yytext + ' fila:' + yylloc.first_line + ' columna:' + yylloc.first_column); 
-    //console.log(yylloc);
+    lisErrorLexico.push([yylloc.first_line, yylloc.first_column+1, yytext]); // Fila, Columna, Descripción
 }
 
 /lex
@@ -162,15 +159,12 @@ var lisTraduccion[];
 // Relacionales
 %left 'tk_menorq' 'tk_mayorq' 'tk_menorigual' 'tk_mayorigual' 'tk_dobleigual' 'tk_diferente'
 
-// Incremento, Decremento
-%left 'tk_incremento' 'tk_decremento'
-
 // Operaciones Aritméticas
 %left 'tk_mas' 'tk_menos'
 %left 'tk_multi' 'tk_div'
 
 // Negación y Menos de número Negativo
-%left 'tk_not' 'tk_menosnumero'
+%left 'tk_not' 'MENOSNUMERO'
 
 // Return
 %left 'tk_return'
@@ -179,23 +173,23 @@ var lisTraduccion[];
 
 %%
 INICIO
-    : TODO EOF                     {  } 
+    : TODO EOF                     {/*console.log('----------------'); console.log(lisTokens); console.log('#----------------#');*/ return [{listaTokens: lisTokens}, {listaErroresLexicos: lisErrorLexico}, {listaErroresSintacticos: lisErrorSintactico}];} 
     ;
 
 TODO
-    : INSTRUCCIONESTODO
-    |
+    : INSTRUCCIONESTODO                     {$$=`${$1}`;}
+    |                                       {$$=``;}
     ;
 
 INSTRUCCIONESTODO
-    : LISTASINTAXIS
-    | INSTRUCCIONESTODO LISTASINTAXIS
+    : LISTASINTAXIS                         {$$=`${$1}`;}
+    | INSTRUCCIONESTODO LISTASINTAXIS       {$$=`${$1} ${$2}`;}
     ;
 
 LISTASINTAXIS
-    : SINTAXISCLASE
-    | SINTAXISINTERFACE
-    | ERROR2
+    : SINTAXISCLASE                     {$$=`${$1}`;}
+    | SINTAXISINTERFACE                 {$$=`${$1}`;}
+    | ERROR2                            {$$=``;}
     ;
 
 /*------------------------------------*
@@ -204,24 +198,21 @@ LISTASINTAXIS
 *                                     *
 *-------------------------------------*/
 SINTAXISCLASE
-    : tk_public tk_class tk_identificador tk_llaa TODOCLASE tk_llac {console.log($1+' '+$2+' '+$3+' '+$4+' '+$6);}
+    : tk_public tk_class tk_identificador tk_llaa TODOCLASE tk_llac {$$=`class ${$3}{\n${$5}\n}`;}
     ;
 
 TODOCLASE
-    : TODOCLASELISTA
-    |
+    : TODOCLASELISTA                {$$=`${$1}`;}
+    | TODOCLASE TODOCLASELISTA      {$$=`${$1} ${$2}`;}
+    |                               {$$=``;}
     ;
 
 TODOCLASELISTA
-    : TODOCLASELISTA VARIABLES
-    | TODOCLASELISTA ASIGNACIONVAR
-    | TODOCLASELISTA FUNCIONES
-    | TODOCLASELISTA METODOS
-    | VARIABLES
-    | ASIGNACIONVAR
-    | FUNCIONES
-    | METODOS
-    | MAIN
+    : VARIABLES                         {$$=`${$1}`;}
+    | ASIGNACIONVAR                     {$$=`${$1}`;}
+    | FUNCIONES                         {$$=`${$1}`;}
+    | METODOS                           //{$$=`${$1}`;}
+    | MAIN                              {$$=`${$1}`;}
     ;
 
 /*------------------------------------*
@@ -230,14 +221,18 @@ TODOCLASELISTA
 *                                     *
 *-------------------------------------*/
 SINTAXISINTERFACE
-    : tk_public tk_interface tk_identificador tk_llaa TODOINTERFACE tk_llac {console.log($1+' '+$2+' '+$3+' '+$4+' '+$5+' '+$6);}
+    : tk_public tk_interface tk_identificador tk_llaa TODOINTERFACE tk_llac                             {$$=``;}
     ;
 
 TODOINTERFACE
-    : TODOINTERFACE tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_puntocoma {$$ = $2+' '+$3+' '+$4+' '+$5+' '+$7+' '+$8;}
-    | tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_puntocoma {$$ = $2+' '+$3+' '+$4+' '+$5+' '+$7+' '+$8;}
-    | TODOINTERFACE ERROR2 tk_puntocoma
-    | ERROR2 tk_puntocoma
+    : TODOINTERFACE TODOINTERFACELISTA                                                                  {$$=``;}
+    | TODOINTERFACELISTA                                                                                {$$=``;}
+    |                                                                                                 
+    ;
+
+TODOINTERFACELISTA
+    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_puntocoma                    {$$=``;}
+    | ERROR2 tk_puntocoma                                                                               {$$=``;}
     ;
 
 
@@ -247,22 +242,22 @@ TODOINTERFACE
 *                                     *
 *-------------------------------------*/
 VARIABLES 
-	: TIPO LISTAVARIABLES tk_puntocoma
-    | ERROR2 tk_puntocoma
+	: TIPO LISTAVARIABLES tk_puntocoma      {$$=`var ${$2}; \n`;}
+    | ERROR2 tk_puntocoma                   {$$=``;}
     ;
 
 ASIGNACIONVAR
-    : tk_identificador tk_igual EXP tk_puntocoma
+    : tk_identificador tk_igual EXP tk_puntocoma  {$$=`${$1} = ${$3}; \n`;}
     ;
 
 LISTAVARIABLES 
 	: SINTAXISVARIABLE
-    | LISTAVARIABLES tk_coma SINTAXISVARIABLE
+    | LISTAVARIABLES tk_coma SINTAXISVARIABLE {$$=`${$1} , ${$3}`;}
     ;
     
 SINTAXISVARIABLE
-    : tk_identificador tk_igual EXP
-    | tk_identificador
+    : tk_identificador tk_igual EXP     {$$=`${$1} = ${$3}`;}
+    | tk_identificador                  {$$=`${$1}`;}
     ;
 
 
@@ -272,7 +267,7 @@ SINTAXISVARIABLE
 *                                     *
 *-------------------------------------*/
 MAIN
-    : tk_public tk_static tk_void tk_main tk_para tk_String tk_cora tk_corc tk_identificador tk_parc tk_llaa INSTRUCCIONES tk_llac
+    : tk_public tk_static tk_void tk_main tk_para tk_String tk_cora tk_corc tk_identificador tk_parc tk_llaa INSTRUCCIONES tk_llac {$$=`function main(${$9}){\n${$12}\n}`;}
     ;
 
 
@@ -282,7 +277,7 @@ MAIN
 *                                     *
 *-------------------------------------*/
 FUNCIONES
-    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_llaa INSTRUCCIONES tk_llac
+    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_llaa INSTRUCCIONES tk_llac   {$$=`function ${$3}(${$5}){\n${$8}\n}\n`;}
     ;
 
 
@@ -292,7 +287,7 @@ FUNCIONES
 *                                     *
 *-------------------------------------*/
 METODOS
-    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_puntocoma
+    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_puntocoma //{$$=`${}`;}
     ;
 
 
@@ -308,6 +303,7 @@ TIPORETORNO
 
 TIPO
     : tk_int
+    | tk_double
     | tk_boolean
     | tk_String
     | tk_char
@@ -319,20 +315,20 @@ TIPO
 *                                     *
 *-------------------------------------*/
 PARAMETROS
-    : TIPO tk_identificador
-    | PARAMETROS tk_coma TIPO tk_identificador
-    |    
+    : TIPO tk_identificador                             {$$ = `${$2}`;}
+    | PARAMETROS tk_coma TIPO tk_identificador          {$$ = `${$1},${$4}`;}
+    |                                                   {$$ = ``;}    
     ;
 
 LISTAPARAMETROS
-    : EXP
-    | LISTAPARAMETROS tk_coma EXP
+    : EXP                                               {$$ = `${$1}`;}
+    | LISTAPARAMETROS tk_coma EXP                       {$$ = `${$},${$3}`;}
     ;
 
 LISTAPARAMETROS2
-    : EXP
-    | LISTAPARAMETROS2 tk_coma EXP
-    |
+    : EXP                                               {$$ = `${$1}`;}
+    | LISTAPARAMETROS2 tk_coma EXP                      {$$ = `${$1},${$3}`;}
+    |                                                   {$$ = ``;}
     ;
 
 /*------------------------------------*
@@ -341,40 +337,35 @@ LISTAPARAMETROS2
 *                                     *
 *-------------------------------------*/
 INSTRUCCIONES
-    : LISTAINSTRUCCIONES 
-    |
+    : LISTAINSTRUCCIONES            {$$=`${$1}`;} 
+    |                               {$$=``;}
     ;
 
 LISTAINSTRUCCIONES
-    : LISTAINSTRUCCIONES VARIABLES 
-    | LISTAINSTRUCCIONES ASIGNACIONVAR
-    | LISTAINSTRUCCIONES IF
-    | LISTAINSTRUCCIONES FOR
-    | LISTAINSTRUCCIONES WHILE
-    | LISTAINSTRUCCIONES DOWHILE
-    | LISTAINSTRUCCIONES tk_system tk_punto tk_out tk_punto tk_println tk_para PRINT tk_parc tk_puntocoma
-    | LISTAINSTRUCCIONES tk_system tk_punto tk_out tk_punto tk_print tk_para PRINT tk_parc tk_puntocoma
-    | LISTAINSTRUCCIONES tk_break tk_puntocoma
-    | LISTAINSTRUCCIONES tk_continue tk_puntocoma
-    | LISTAINSTRUCCIONES tk_return EXP tk_puntocoma
-    | LISTAINSTRUCCIONES tk_identificador tk_para LISTAPARAMETROS2 tk_parc tk_puntocoma
-    | VARIABLES
-    | ASIGNACIONVAR
-    | IF
-    | FOR
-    | WHILE
-    | DOWHILE
-    | tk_break tk_puntocoma
-    | tk_continue tk_puntocoma
-    | tk_return EXP tk_puntocoma
-    | tk_identificador tk_para LISTAPARAMETROS2 tk_parc tk_puntocoma
-    | tk_system tk_punto tk_out tk_punto tk_println tk_para PRINT tk_parc tk_puntocoma
-    | tk_system tk_punto tk_out tk_punto tk_print tk_para PRINT tk_parc tk_puntocoma
+    : LISTAINSTRUCCIONES LISTAINSTRUCCIONESSINTAXIS                                                         {$$ = `${$1} ${$2}`;}
+    | LISTAINSTRUCCIONESSINTAXIS                                                                            {$$ = `${$1}`;}                        
+    ;
+
+LISTAINSTRUCCIONESSINTAXIS
+    : VARIABLES                                                                                             {$$=`${$1}`;}
+    | ASIGNACIONVAR                                                                                         {$$=`${$1}`;}
+    | IF                                                                                                    {$$=`${$1}`;}
+    | FOR                                                                                                   {$$=`${$1}`;}
+    | WHILE                                                                                                 {$$=`${$1}`;}
+    | DOWHILE                                                                                               {$$=`${$1}`;}
+    | tk_break tk_puntocoma                                                                                 {$$=`${$1} ${$2};`;}
+    | tk_continue tk_puntocoma                                                                              {$$=`${$1} ${$2};`;}
+    | tk_return EXP tk_puntocoma                                                                            {$$=`${$1} ${$2};`;}
+    | tk_identificador tk_para LISTAPARAMETROS2 tk_parc tk_puntocoma                                        {$$=`${$1} (${$3});`;}
+    | tk_system tk_punto tk_out tk_punto tk_println tk_para PRINT tk_parc tk_puntocoma                      {$$=`console.log(${$7});`;}
+    | tk_system tk_punto tk_out tk_punto tk_print tk_para PRINT tk_parc tk_puntocoma                        {$$=`console.log(${$7});`;}
+    | tk_identificador tk_mas tk_mas tk_puntocoma                                                           {$$=`\n${$1}++;`;}
+    | tk_identificador tk_menos tk_menos tk_puntocoma                                                       {$$=`\n${$1}--;`;}
     ;
 
 PRINT
-    : EXP
-    |
+    : EXP           {$$=`${$1}`;}
+    |               {$$=``;}
     ;
 
 /*------------------------------------*
@@ -383,7 +374,7 @@ PRINT
 *                                     *
 *-------------------------------------*/
 FOR
-    : tk_for tk_para DEC tk_puntocoma EXP tk_puntocoma EXP tk_parc tk_llaa INSTRUCCIONES tk_llac
+    : tk_for tk_para DEC tk_puntocoma EXP tk_puntocoma EXP tk_parc tk_llaa INSTRUCCIONES tk_llac {$$=`for (${$3} ; ${$5} ; ${$7}){\n${$10}\n}\n`;}
     ;
 
 /*------------------------------------*
@@ -392,7 +383,7 @@ FOR
 *                                     *
 *-------------------------------------*/
 WHILE
-    : tk_while tk_para EXP tk_parc tk_llaa INSTRUCCIONES tk_llac
+    : tk_while tk_para EXP tk_parc tk_llaa INSTRUCCIONES tk_llac            {$$=`while(${$3}){\n${$6}\n}\n`;}
     ;
 
 /*------------------------------------*
@@ -401,7 +392,7 @@ WHILE
 *                                     *
 *-------------------------------------*/
 DOWHILE
-    : tk_llaa INSTRUCCIONES tk_llac tk_while tk_para EXP tk_parc tk_puntocoma
+    : tk_do tk_llaa INSTRUCCIONES tk_llac tk_while tk_para EXP tk_parc tk_puntocoma             {$$=`do{\n${$3}\n}while(${$7});`;}
     ;
 
 /*------------------------------------*
@@ -410,20 +401,20 @@ DOWHILE
 *                                     *
 *-------------------------------------*/
 IF
-    : LISTAIF ELSE
+    : LISTAIF ELSE                                                      {$$=`${$1} ${$2}`;}
     ;
 
 LISTAIF
-    : SINTAXISIF
-    | LISTAIF tk_else SINTAXISIF
+    : SINTAXISIF                                                        {$$=`${$1}`;}
+    | LISTAIF tk_else SINTAXISIF                                        {$$=`${$1}else ${$3}`;}
     ;
 
 SINTAXISIF
-    : tk_if tk_para EXP tk_parc tk_llaa INSTRUCCIONES tk_llac
+    : tk_if tk_para EXP tk_parc tk_llaa INSTRUCCIONES tk_llac           {$$=`if(${$3}){\n${$6}\n}`;}
     ;
 
 ELSE
-    : tk_else tk_llaa INSTRUCCIONES tk_llac
+    : tk_else tk_llaa INSTRUCCIONES tk_llac                             {$$=`else{\n${$3}\n}\n`;}
     |
     ;
 
@@ -433,9 +424,9 @@ ELSE
 *                                     *
 *-------------------------------------*/
 DEC
-    : TIPO tk_identificador tk_igual EXP
-    | tk_identificador tk_igual EXP
-    | tk_identificador
+    : TIPO tk_identificador tk_igual EXP        {$$ = `var ${$2} = ${$4}`;}
+    | tk_identificador tk_igual EXP             {$$ = `${$1} = ${$3}`;}
+    | tk_identificador                          {$$ = `${$1}`;}
     ;
 
 /*------------------------------------*
@@ -444,27 +435,27 @@ DEC
 *                                     *
 *-------------------------------------*/
 EXP
-    : EXP tk_and EXP
-    | EXP tk_or EXP
-    | EXP tk_xor EXP
-	| EXP tk_menorq EXP			
-    | EXP tk_mayorq EXP	
-    | EXP tk_menorigual EXP	
-    | EXP tk_mayorigual EXP	
-    | EXP tk_dobleigual EXP
-    | EXP tk_diferente EXP	
-	| EXP tk_mas EXP
-	| EXP tk_menos EXP
-    | EXP tk_multi EXP
-    | EXP tk_div EXP
-    | tk_identificador tk_para LISTAPARAMETROS tk_parc
-    | tk_identificador tk_para tk_parc
-    | tk_not EXP
-    | tk_identificador tk_incremento 
-    | tk_identificador tk_decremento
-	| tk_menos EXP %prec tk_menosnumero
-    | tk_para EXP tk_parc
-	| VAL
+    : EXP tk_and EXP                                        {$$ = `${$1} && ${$3}`; }
+    | EXP tk_or EXP                                         {$$ = `${$1} || ${$3}`;}
+    | EXP tk_xor EXP                                        {$$ = `${$1} ^ ${$3}`;}
+    | EXP tk_menorigual EXP	                                {$$ = `${$1} <= ${$3}`;}
+    | EXP tk_mayorigual EXP                                 {$$ = `${$1} >= ${$3}`;}
+    | EXP tk_dobleigual EXP                                 {$$ = `${$1} == ${$3}`;}
+    | EXP tk_mas tk_mas                                     {$$ = `${$1}++`;}
+    | EXP tk_menos tk_menos	                                {$$ = `${$1}--`;}
+	| EXP tk_menorq EXP			                            {$$ = `${$1} < ${$3}`;}
+    | EXP tk_mayorq EXP                                     {$$ = `${$1} > ${$3}`;}
+    | EXP tk_diferente EXP	                                {$$ = `${$1} != ${$3}`;}
+	| EXP tk_mas EXP                                        {$$ = `${$1} + ${$3}`;}
+	| EXP tk_menos EXP                                      {$$ = `${$1} - ${$3}`;}
+    | EXP tk_multi EXP                                      {$$ = `${$1} * ${$3}`;}
+    | EXP tk_div EXP                                        {$$ = `${$1} / ${$3}`;}
+    | tk_identificador tk_para LISTAPARAMETROS tk_parc      {$$ = `${$1}(${$3})`;}
+    | tk_identificador tk_para tk_parc                      {$$ = `${$1}()`;}
+    | tk_not EXP                                            {$$ = `!${$2}`;}
+	| tk_menos EXP %prec MENOSNUMERO                        {$$ = `-${$2}`;}
+    | tk_para EXP tk_parc                                   {$$ = `(${$2})`;}
+	| VAL                                                   {$$ = `${$1}`;}
     ;
 
 /*------------------------------------*
@@ -473,12 +464,13 @@ EXP
 *                                     *
 *-------------------------------------*/
 VAL
-    : tk_identificador
-    | tk_entero
-    | tk_decimal
-    | tk_cadena
-    | tk_true
-    | tk_false
+    : tk_identificador      {$$ = `${$1}`; }
+    | tk_entero             {$$ = `${$1}`; }
+    | tk_decimal            {$$ = `${$1}`; }
+    | tk_cadena             {$$ = `${$1}`; }
+    | tk_cadenasimple       {$$ = `${$1}`; }
+    | tk_true               {$$ = `true` ; }
+    | tk_false              {$$ = `false`; }
     ;
 
 /*------------------------------------*
@@ -492,5 +484,5 @@ ERROR
     ;
 
 ERROR2
-    : error {console.log('error: '+yytext+ ' fila: '+this._$.first_line);}
+    : error {lisErrorSintactico.push([this._$.first_line, this.first_column+1, yytext]); console.log('error: '+yytext+ ' fila: '+this._$.first_line);} //Fila, Columna, Descripción
     ;

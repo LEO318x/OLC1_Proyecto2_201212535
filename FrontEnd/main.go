@@ -7,6 +7,7 @@ import(
 )
 
 func index(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "text/html")
 	template, err := template.ParseFiles("pagina/index.html")
 	if err != nil{
 		fmt.Fprintf(w, "pagina no encontrada")
@@ -16,7 +17,8 @@ func index(w http.ResponseWriter, r *http.Request){
 }
 
 func main(){
-	//http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("templates/css/"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("pagina/css/"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("pagina/js/"))))
 
 	http.HandleFunc("/", index)
 	fmt.Println("servidor activo")

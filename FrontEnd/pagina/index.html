@@ -1,5 +1,262 @@
 <!DOCTYPE html>
-<body>
-    <h1>Hola mundo! XD</h1>
-</body>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css" integrity="sha512-xIf9AdJauwKIVtrVRZ0i4nHP61Ogx9fSRAkCLecmE2dL/U8ioWpDvFCAy4dcfecN72HHB9+7FfQj3aiO68aaaw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/monokai.min.css" integrity="sha512-R6PH4vSzF2Yxjdvb2p2FA06yWul+U0PDDav4b/od/oXf9Iw37zl10plvwOXelrjV2Ai7Eo3vyHeyFUjhXdBCVQ==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.min.css" integrity="sha512-LeCmts7kEi09nKc+DwGJqDV+dNQi/W8/qb0oUSsBLzTYiBwxj0KBlAow2//jV7jwEHwSCPShRN2+IWwWcn1x7Q==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/custom.css">
+
+    <title>OLC1 - PROYECTO 2 - 201212535</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                                              
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                            <a class="navbar-brand" href="#">OLC1 - PROYECTO II</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarColor01">
+                              <ul class="navbar-nav mr-auto">
+                                <li class="nav-item dropdown">
+                                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Archivo</a>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#"><input type="file" id="abrirArchivo" name="abrirArchivo" onchange="readFiles(event); this.value=null; return false;"/>Abrir</a>
+                                    <a class="dropdown-item" href="#">Nuevo</a>
+                                    <a class="dropdown-item" href="#">Guardar</a>
+                                    <a class="dropdown-item" href="#">Guardar Como</a>
+                                  </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Descargar</a>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">Javascript</a>
+                                      <a class="dropdown-item" href="#">Python</a>
+                                      <a class="dropdown-item" href="#">Ambos</a>
+                                    </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </nav>
+                          <hr> 
+                        <div class="row">
+                            <div class="col-sm">
+                                <div>
+                                    <div class="operationDiv">
+                                        <button type="submit" class="btn btn-primary btn-sm" id="composeButton"><span class="oi" data-glyph="plus"></span></button>
+                                        <button type="submit" class="btn btn-primary btn-sm" onclick="obtenerTextoCM();"><span class="fa fa-language"></span>&nbsp;<strong>Analizar</strong></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <fieldset disabled>
+                                <div class="input-group col-sm-8">
+                                      <div class="input-group-text form-control-sm">
+                                        <i class="fa fa-user "></i><span><strong> &nbsp; 201212535</strong></span>
+                                      </div>
+                                  </div>
+                                </fieldset>    
+                            </div>
+                          </div>
+
+                        
+                        
+                        <ul class="nav nav-tabs marginBottom" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                              <a class="nav-link active" id="inicio-tab" data-toggle="tab" href="#inicio" onclick="encontrarInstanciaCM(1);" role="tab" aria-controls="inicio" aria-selected="true"><button class="close closeTab" type="button" >×</button>Pestaña 1</a>
+                            </li>
+                          </ul>
+                          <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active animate__animated animate__bounceInUp" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
+                                    <textarea id="editor1"></textarea>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <hr>
+                        <span><strong><i class="fa fa-terminal"></i>&nbsp; JavaScript</strong></span>&nbsp;<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaJS"><i class="fa fa-table"></i>&nbsp; Reporte</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#arbolJS"><i class="fa fa-tree"></i>&nbsp; Árbol</button><br>                                              
+                        <textarea style='background-color: #2f3640; color: white;' id="consolaJS" rows="10" cols="100" readonly></textarea>
+                        <hr>
+                        <span><strong><h4><i class="fa fa-terminal"></i>&nbsp; Python</h4></strong></span> 
+                        <textarea style='background-color: #2f3640; color: white;' id="consolaPY" rows="10" cols="100" readonly></textarea>
+                    </div>
+                </div>
+                <!-- Modal JS-->
+                <div class="modal fade" id="reporteTablaJS" tabindex="-1" aria-labelledby="reporteTablaJSLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reporteTablaJSLabel">Tabla Errores Léxicos/Sintácticos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="cuerpoReporteModal"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal Árbol JS-->
+                <div class="modal fade" id="arbolJS" tabindex="-1" aria-labelledby="arbolJSLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="arbolJSLabel">Árbol Sintáctico</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="cuerpoArbolModal"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js" integrity="sha512-WWC1A/JchDFZ2ZGaNyMC7CmPFXGLI/6Ih7WN6YG0DX1NGMkW5lqCVFxCmEx3e56Z7iqdQGpO0f+m2t9CJhdb2Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/clike/clike.min.js" integrity="sha512-HT3t3u7HfQ7USbSZa0Tk5caEnUfO8s58OWqMBwm96xaZAbA17rpnXXHDefR8ixVmSSVssbOv3W3OMh6mNX/XuQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/javascript/javascript.min.js" integrity="sha512-e3U/84Fo+2ZAnRhLkjStm2hYnkmZ/NRmeesZ/GHjDhcLh35eYTQxsfSeDppx6Se5aX0N6mrygH7tr4wugWsPeQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script src="./js/tabs.js"></script>
+    <script src="./js/graficarArbol.js"></script>
+    <script>
+        var cAux = 2;
+        var javaEditor;
+        $("#composeButton").click( function(){
+            setTimeout(function(){
+                javaEditor = CodeMirror.fromTextArea(document.getElementById("editor"+cAux), {
+                lineNumbers: true,
+                matchBrackets: true,
+                lineWrapping: true,
+                scrollbarStyle: 'null',
+                theme: "monokai",
+                mode: "text/x-java"
+            }); cAux++; javaEditor.setSize(null, 600); }, 100);            
+        });
+
+        javaEditor = CodeMirror.fromTextArea(document.getElementById("editor1"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        lineWrapping: true,
+        scrollbarStyle: 'null',
+        theme: "monokai",
+        mode: "text/x-java"
+      });
+      javaEditor.setSize(null, 600);
+    </script>
+    <script>
+        function readFiles(event) {
+        var fileList = event.target.files;
+
+            for(var i=0; i < fileList.length; i++ ) {
+                loadAsText(fileList[i]);
+            }
+        }
+
+        function loadAsText(theFile) {          	
+            var reader = new FileReader();
+
+            reader.onload = function(loadedEvent) {
+                javaEditor.setValue("");
+                javaEditor.clearHistory();
+                javaEditor.replaceRange(loadedEvent.target.result, CodeMirror.Pos(javaEditor.firstLine()));
+                //console.log(loadedEvent.target.result);
+            }
+            reader.readAsText(theFile);
+        }
+
+        function encontrarInstanciaCM(id){
+            javaEditor = $("#editor"+id).next('.CodeMirror')[0].CodeMirror;
+        }
+
+        function obtenerTextoCM(e){
+          var texto = javaEditor.getValue();
+          $("#consolaJS").empty();
+          $("#consolaPY").empty();
+          $("#cuerpoReporteModal").empty();
+          //console.log(texto);
+
+          var datos = texto;
+          //e.preventDefault();
+        $.ajax(
+        {
+          url : 'http://localhost:3000/traducirjs',
+          type: 'POST',
+          data: {data: datos},
+        })
+          .done(function(data) {
+            listaTokens = data[0];
+            erroresLexicos = data[1];
+            erroresSintacticos = data[2];
+            datosArbol = data[3];
+
+            /*for(i = 0; i < listaTokens.listaTokens.length; i++){
+              console.log(listaTokens.listaTokens[i]);
+            }*/
+            var cAux = 1;
+            var consolaJS = "";
+            var tablaReporteErrores = "<table id=\"tablaErrorLexicoSintactico\" class=\"table table-striped table-hover table-sm table-bordered\">";
+              tablaReporteErrores+= "<thead><tr><th>#</th><th>Tipo Error</th><th>Fila</th><th>Columna</th><th>Descripción</th></tr></thead><tbody>";
+              consolaJS += "*-----↓ERRORES LÉXICOS↓-----*\n";
+            for (let i = 0; i < erroresLexicos.listaErroresLexicos.length; i++) {
+              consolaJS += "Fila: " + erroresLexicos.listaErroresLexicos[i][0]+"   Columna: "+ erroresLexicos.listaErroresLexicos[i][1] + "   Error: " + erroresLexicos.listaErroresLexicos[i][2]+"\n";
+              tablaReporteErrores += `<tr><th scope="row">${cAux}</th><td>Léxico</td><td>${erroresLexicos.listaErroresLexicos[i][0]}</td><td>${erroresLexicos.listaErroresLexicos[i][1]}</td><td>${erroresLexicos.listaErroresLexicos[i][2]}</td></tr>`;
+              cAux++;
+            }           
+            
+            consolaJS +="\n*-----↓ERRORES SINTÁCTICOS↓-----*\n";
+            for (let i = 0; i < erroresSintacticos.listaErroresSintacticos.length; i++) {
+              consolaJS += "Fila: " + erroresSintacticos.listaErroresSintacticos[i][0]+ "   Error: " + erroresSintacticos.listaErroresSintacticos[i][2]+"\n";
+              tablaReporteErrores += `<tr><th scope="row">${cAux}</th><td>Sintáctico</td><td>${erroresSintacticos.listaErroresSintacticos[i][0]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][1]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][2]}</td></tr>`;
+              cAux++;
+            }
+            
+            tablaReporteErrores += "</tbody></table>";
+            $("#consolaJS").append(consolaJS);
+            $("#cuerpoReporteModal").append(tablaReporteErrores);
+            //console.log(listaTokens.listaTokens[0]); 
+
+            graficarArbol(datosArbol);
+          })
+          .fail(function(data) {
+          //Error
+          })
+          .always(function(data) {
+          // alert( "complete" );
+          });
+        }
+    </script>
+    </body>
 </html>

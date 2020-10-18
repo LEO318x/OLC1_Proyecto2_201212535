@@ -1,0 +1,49 @@
+.nav-tabs > li .close {
+    margin: -2px 0 0 10px;
+    font-size: 18px;
+    color: red;
+}
+.marginBottom {
+    margin-bottom :1px !important;
+}
+.operationDiv {
+    padding:5px 10px 5px 5px;
+}
+.operationDivWrapper {
+    margin-top:-1px;
+}
+.leftMenu {
+    height :70%;
+    background-color: #E6E6E6;
+    border-right: 2px solid #BFBFBF;
+}
+
+input#abrirArchivo {
+    height: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    /*font-size: 100px;
+    z-index: 2;*/
+  
+    opacity: 0.0; /* Standard: FF gt 1.5, Opera, Safari */
+    filter: alpha(opacity=0); /* IE lt 8 */
+    -ms-filter: "alpha(opacity=0)"; /* IE 8 */
+    -khtml-opacity: 0.0; /* Safari 1.x */
+    -moz-opacity: 0.0; /* FF lt 1.5, Netscape */
+  }
+
+  .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 3px;
+  }
+
+  .node text { font: 12px sans-serif; }
+
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
