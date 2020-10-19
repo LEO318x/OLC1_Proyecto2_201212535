@@ -1,5 +1,5 @@
 function graficarArbol(jsonArbol){
-
+    d3.select("svg").remove(); 
     var margin = {
         top: 20,
         right: 120,

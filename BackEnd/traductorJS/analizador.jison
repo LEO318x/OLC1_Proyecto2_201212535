@@ -173,7 +173,7 @@ exports.LimpiarListas = function(){
 
 %%
 INICIO
-    : TODO EOF                     {/*console.log('----------------'); console.log(lisTokens); console.log('#----------------#');*/ return [{listaTokens: lisTokens}, {listaErroresLexicos: lisErrorLexico}, {listaErroresSintacticos: lisErrorSintactico}];} 
+    : TODO EOF                     {/*console.log('----------------'); console.log(lisTokens); console.log('#----------------#');*/ return [{listaTokens: lisTokens}, {listaErroresLexicos: lisErrorLexico}, {listaErroresSintacticos: lisErrorSintactico}, {listaTraduccion: $1}];} 
     ;
 
 TODO

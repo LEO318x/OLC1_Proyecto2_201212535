@@ -40,14 +40,14 @@
                                   <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#"><input type="file" id="abrirArchivo" name="abrirArchivo" onchange="readFiles(event); this.value=null; return false;"/>Abrir</a>
                                     <a class="dropdown-item" href="#">Nuevo</a>
-                                    <a class="dropdown-item" href="#">Guardar</a>
+                                    <a class="dropdown-item" href="#" onclick="guardarArchivo();">Guardar</a>
                                     <a class="dropdown-item" href="#">Guardar Como</a>
                                   </div>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Descargar</a>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="#">Javascript</a>
+                                      <a class="dropdown-item" href="#" onclick="descargarArchivoTraduccionJS(traduccionJS, generarNombre(10), 'text/javascript');">Javascript</a>
                                       <a class="dropdown-item" href="#">Python</a>
                                       <a class="dropdown-item" href="#">Ambos</a>
                                     </div>
@@ -91,14 +91,14 @@
                     </div>
                     <div class="col-md-6">
                         <hr>
-                        <span><strong><i class="fa fa-terminal"></i>&nbsp; JavaScript</strong></span>&nbsp;<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaJS"><i class="fa fa-table"></i>&nbsp; Reporte</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#arbolJS"><i class="fa fa-tree"></i>&nbsp; Árbol</button><br>                                              
+                        <span><strong><i class="fa fa-terminal"></i>&nbsp; JavaScript</strong></span>&nbsp;<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaTokensJS"><i class="fa fa-table"></i>&nbsp; Reporte Tokens</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaJS"><i class="fa fa-table"></i>&nbsp; Reporte Errores</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#arbolJS"><i class="fa fa-tree"></i>&nbsp; Árbol</button><br>                                              
                         <textarea style='background-color: #2f3640; color: white;' id="consolaJS" rows="10" cols="100" readonly></textarea>
                         <hr>
-                        <span><strong><h4><i class="fa fa-terminal"></i>&nbsp; Python</h4></strong></span> 
+                        <span><strong><i class="fa fa-terminal"></i>&nbsp; Python</strong></span>&nbsp;<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaTokensPY"><i class="fa fa-table"></i>&nbsp; Reporte Tokens</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reporteTablaPY"><i class="fa fa-table"></i>&nbsp; Reporte Errores</button><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#arbolPY"><i class="fa fa-tree"></i>&nbsp; Árbol</button><br> 
                         <textarea style='background-color: #2f3640; color: white;' id="consolaPY" rows="10" cols="100" readonly></textarea>
                     </div>
                 </div>
-                <!-- Modal JS-->
+                <!-- Modal Errores JS-->
                 <div class="modal fade" id="reporteTablaJS" tabindex="-1" aria-labelledby="reporteTablaJSLabel" aria-hidden="true">
                   <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
@@ -110,6 +110,25 @@
                       </div>
                       <div class="modal-body">
                         <div id="cuerpoReporteModal"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal Tokens JS-->
+                <div class="modal fade" id="reporteTablaTokensJS" tabindex="-1" aria-labelledby="reporteTablaTokensJSLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reporteTablaTokensJSLabel">Tabla Tokens</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="cuerpoReporteTokensJSModal"></div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -151,6 +170,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
     <script src="./js/tabs.js"></script>
     <script src="./js/graficarArbol.js"></script>
+    <script src="./js/funciones.js"></script>
     <script>
         var cAux = 2;
         var javaEditor;
@@ -206,13 +226,14 @@
           $("#consolaJS").empty();
           $("#consolaPY").empty();
           $("#cuerpoReporteModal").empty();
+          $("#cuerpoReporteTokensJSModal").empty();
           //console.log(texto);
 
           var datos = texto;
           //e.preventDefault();
         $.ajax(
         {
-          url : 'http://localhost:3000/traducirjs',
+          url : './traducirjs',
           type: 'POST',
           data: {data: datos},
         })
@@ -220,35 +241,48 @@
             listaTokens = data[0];
             erroresLexicos = data[1];
             erroresSintacticos = data[2];
-            datosArbol = data[3];
+            traduccionJS = data[3].listaTraduccion;
+            datosArbol = data[4];
 
             /*for(i = 0; i < listaTokens.listaTokens.length; i++){
               console.log(listaTokens.listaTokens[i]);
             }*/
+            var cAuxT = 1;
             var cAux = 1;
             var consolaJS = "";
-            var tablaReporteErrores = "<table id=\"tablaErrorLexicoSintactico\" class=\"table table-striped table-hover table-sm table-bordered\">";
-              tablaReporteErrores+= "<thead><tr><th>#</th><th>Tipo Error</th><th>Fila</th><th>Columna</th><th>Descripción</th></tr></thead><tbody>";
+            var tablaTokensJS = "<table id=\"tablaTokensJS\" class=\"table table-striped table-hover table-sm table-bordered\">";
+                tablaTokensJS+= "<thead><tr><th>#</th><th>Fila</th><th>Columna</th><th>Tipo</th><th>Descripción</th></tr></thead><tbody>";
+            
+            for (let i = 0; i < listaTokens.listaTokens.length; i++) {
+              tablaTokensJS += `<tr><th scope="row">${cAuxT}</th><td>${listaTokens.listaTokens[i][0]}</td><td>${listaTokens.listaTokens[i][1]}</td><td>${listaTokens.listaTokens[i][2]}</td><td>${listaTokens.listaTokens[i][3]}</td></tr>`;
+              cAuxT++;
+            }              
+            tablaTokensJS += "</tbody></table>";
+            $("#cuerpoReporteTokensJSModal").append(tablaTokensJS);
+
+            var tablaReporteErroresJS = "<table id=\"tablaErrorLexicoSintactico\" class=\"table table-striped table-hover table-sm table-bordered\">";
+              tablaReporteErroresJS+= "<thead><tr><th>#</th><th>Tipo Error</th><th>Fila</th><th>Columna</th><th>Descripción</th></tr></thead><tbody>";
               consolaJS += "*-----↓ERRORES LÉXICOS↓-----*\n";
             for (let i = 0; i < erroresLexicos.listaErroresLexicos.length; i++) {
               consolaJS += "Fila: " + erroresLexicos.listaErroresLexicos[i][0]+"   Columna: "+ erroresLexicos.listaErroresLexicos[i][1] + "   Error: " + erroresLexicos.listaErroresLexicos[i][2]+"\n";
-              tablaReporteErrores += `<tr><th scope="row">${cAux}</th><td>Léxico</td><td>${erroresLexicos.listaErroresLexicos[i][0]}</td><td>${erroresLexicos.listaErroresLexicos[i][1]}</td><td>${erroresLexicos.listaErroresLexicos[i][2]}</td></tr>`;
+              tablaReporteErroresJS += `<tr><th scope="row">${cAux}</th><td>Léxico</td><td>${erroresLexicos.listaErroresLexicos[i][0]}</td><td>${erroresLexicos.listaErroresLexicos[i][1]}</td><td>${erroresLexicos.listaErroresLexicos[i][2]}</td></tr>`;
               cAux++;
             }           
             
             consolaJS +="\n*-----↓ERRORES SINTÁCTICOS↓-----*\n";
             for (let i = 0; i < erroresSintacticos.listaErroresSintacticos.length; i++) {
               consolaJS += "Fila: " + erroresSintacticos.listaErroresSintacticos[i][0]+ "   Error: " + erroresSintacticos.listaErroresSintacticos[i][2]+"\n";
-              tablaReporteErrores += `<tr><th scope="row">${cAux}</th><td>Sintáctico</td><td>${erroresSintacticos.listaErroresSintacticos[i][0]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][1]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][2]}</td></tr>`;
+              tablaReporteErroresJS += `<tr><th scope="row">${cAux}</th><td>Sintáctico</td><td>${erroresSintacticos.listaErroresSintacticos[i][0]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][1]}</td><td>${erroresSintacticos.listaErroresSintacticos[i][2]}</td></tr>`;
               cAux++;
             }
             
-            tablaReporteErrores += "</tbody></table>";
+            tablaReporteErroresJS += "</tbody></table>";
             $("#consolaJS").append(consolaJS);
-            $("#cuerpoReporteModal").append(tablaReporteErrores);
-            //console.log(listaTokens.listaTokens[0]); 
+            $("#cuerpoReporteModal").append(tablaReporteErroresJS);
+            console.log(traduccionJS); 
 
             graficarArbol(datosArbol);
+            
           })
           .fail(function(data) {
           //Error
