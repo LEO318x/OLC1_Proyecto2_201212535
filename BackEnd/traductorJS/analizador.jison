@@ -199,6 +199,7 @@ LISTASINTAXIS
 *-------------------------------------*/
 SINTAXISCLASE
     : tk_public tk_class tk_identificador tk_llaa TODOCLASE tk_llac {$$=`class ${$3}{\n${$5}\n}`;}
+    | ERROR2 tk_llac                                                       {$$=``;}
     ;
 
 TODOCLASE
@@ -268,6 +269,7 @@ SINTAXISVARIABLE
 *-------------------------------------*/
 MAIN
     : tk_public tk_static tk_void tk_main tk_para tk_String tk_cora tk_corc tk_identificador tk_parc tk_llaa INSTRUCCIONES tk_llac {$$=`function main(${$9}){\n${$12}\n}`;}
+    | ERROR2 tk_llac {$$=``;}
     ;
 
 
