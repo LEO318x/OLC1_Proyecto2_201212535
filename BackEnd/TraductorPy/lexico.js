@@ -3,6 +3,7 @@ class scanner{
         this.fila = 1;
         this.columna = 1;
         this.listaLexemas = [];
+        this.listaTokens = [];
         this.listaErrorLexico = [];
     }
 
@@ -26,14 +27,17 @@ class scanner{
                         this.fila++;
                         this.columna = 1;
                         this.listaLexemas.push([this.fila, this.columna, 'tkSaltoLinea', lexema]);
+                        //this.listaTokens.push(['tkSaltoLinea', lexema]);
                         lexema = "";
                     }else if(ch.charCodeAt(0) == 32 || ch.charCodeAt(0) == 9){
                         this.columna++;
                         if(ch.charCodeAt(0) == 32){ // Espacio
                             this.listaLexemas.push([this.fila, this.columna, 'tkEspacio', ch]);
+                            //this.listaTokens.push(['tkEspacio', ch]);
                         }
                         if(ch.charCodeAt(0) == 9){ // Tabulacion
                             this.listaLexemas.push([this.fila, this.columna, 'tkTab', ch]);
+                            //this.listaTokens.push(['tkTab', ch]);
                         }
                     }else if(this.esNumero(ch)){
                         this.columna++;
@@ -81,6 +85,7 @@ class scanner{
                     }else{
                         //Agregamos el número y mandamos al estado 0
                         this.listaLexemas.push([this.fila, this.columna, 'tkNumero', lexema]);
+                        this.listaTokens.push(['tkNumero', lexema]);
                         lexema = "";
                         estado = 0;
                         this.columna--;
@@ -111,6 +116,7 @@ class scanner{
                     }else{
                         //Agregamos el número decimal y mandamos al estado 0
                         this.listaLexemas.push([this.fila, this.columna, 'tkDecimal', lexema]);
+                        this.listaTokens.push(['tkDecimal', lexema]);
                         lexema = "";
                         estado = 0;
                         this.columna--;
@@ -190,6 +196,7 @@ class scanner{
                 // Estado 9
                 case 9:
                     this.listaLexemas.push([this.fila, this.columna, 'tkCadena', lexema]);
+                    this.listaTokens.push(['tkCadena', lexema]);
                     lexema = "";
                     estado = 0;
                     this.columna--;
@@ -243,6 +250,7 @@ class scanner{
                 // Estado 13
                 case 13:
                     this.listaLexemas.push([this.fila, this.columna, 'tkCadenaSimple', lexema]);
+                    this.listaTokens.push(['tkCadenaSimple', lexema]);
                     lexema = "";
                     estado = 0;
                     this.columna--;
@@ -267,6 +275,7 @@ class scanner{
                     this.columna++;
                     if(ch == '\n'){
                         this.listaLexemas.push([this.fila, this.columna, 'tkComentario', lexema]);
+                        this.listaTokens.push(['tkComentario', lexema]);
                         lexema = "";
                         estado = 0;
                         this.columna--;
@@ -307,6 +316,7 @@ class scanner{
                 // Estado 18
                 case 18:
                     this.listaLexemas.push([this.fila, this.columna, 'tkComentarioMulti', lexema]);
+                    this.listaTokens.push(['tkComentarioMulti', lexema]);
                     lexema = "";
                     estado = 0;
                     this.columna--;
@@ -327,9 +337,13 @@ class scanner{
             }
             i++;
         }
-        console.log(this.listaLexemas);
+       // console.log(this.listaLexemas);
         console.log("-------------------");
         console.log(this.listaErrorLexico);
+    }
+
+    getListaTokens(){
+        return this.listaTokens;
     }
 
     esNumero(ch){
@@ -353,106 +367,132 @@ class scanner{
 
             case "public":
                 this.listaLexemas.push([this.fila, this.columna, 'tkPublic', lexema]);
+                this.listaTokens.push(['tkPublic', lexema]);
                 break;
 
             case "class":
                 this.listaLexemas.push([this.fila, this.columna, 'tkClass', lexema]);
+                this.listaTokens.push(['tkClass', lexema]);
                 break;
 
             case "interface":
                 this.listaLexemas.push([this.fila, this.columna, 'tkInterface', lexema]);
+                this.listaTokens.push(['tkInterface', lexema]);
                 break;
 
             case "void":
                 this.listaLexemas.push([this.fila, this.columna, 'tkVoid', lexema]);
+                this.listaTokens.push(['tkVoid', lexema]);
                 break;
 
             case "main":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMain', lexema]);
+                this.listaTokens.push(['tkMain', lexema]);
                 break;
 
             case "static":
                 this.listaLexemas.push([this.fila, this.columna, 'tkStatic', lexema]);
+                this.listaTokens.push(['tkStatic', lexema]);
                 break;
 
             case "for":
                 this.listaLexemas.push([this.fila, this.columna, 'tkFor', lexema]);
+                this.listaTokens.push(['tkFor', lexema]);
                 break;
 
             case "while":
                 this.listaLexemas.push([this.fila, this.columna, 'tkWhile', lexema]);
+                this.listaTokens.push(['tkWhile', lexema]);
                 break;
 
             case "do":
                 this.listaLexemas.push([this.fila, this.columna, 'tkDo', lexema]);
+                this.listaTokens.push(['tkDo', lexema]);
                 break;
 
             case "if":
                 this.listaLexemas.push([this.fila, this.columna, 'tkIf', lexema]);
+                this.listaTokens.push(['tkIf', lexema]);
                 break;
 
             case "else":
                 this.listaLexemas.push([this.fila, this.columna, 'tkElse', lexema]);
+                this.listaTokens.push(['tkElse', lexema]);
                 break;
 
             case "int":
                 this.listaLexemas.push([this.fila, this.columna, 'tkInt', lexema]);
+                this.listaTokens.push(['tkInt', lexema]);
                 break;
 
             case "boolean":
                 this.listaLexemas.push([this.fila, this.columna, 'tkBoolean', lexema]);
+                this.listaTokens.push(['tkBoolean', lexema]);
                 break;
 
             case "double":
                 this.listaLexemas.push([this.fila, this.columna, 'tkDouble', lexema]);
+                this.listaTokens.push(['tkDouble', lexema]);
                 break;
 
             case "String":
                 this.listaLexemas.push([this.fila, this.columna, 'tkString', lexema]);
+                this.listaTokens.push(['tkString', lexema]);
                 break;
 
             case "char":
                 this.listaLexemas.push([this.fila, this.columna, 'tkChar', lexema]);
+                this.listaTokens.push(['tkChar', lexema]);
                 break;
 
             case "true":
                 this.listaLexemas.push([this.fila, this.columna, 'tkTrue', lexema]);
+                this.listaTokens.push(['tkTrue', lexema]);
                 break;
 
             case "false":
                 this.listaLexemas.push([this.fila, this.columna, 'tkFalse', lexema]);
+                this.listaTokens.push(['tkFalse', lexema]);
                 break;
 
             case "break":
                 this.listaLexemas.push([this.fila, this.columna, 'tkBreak', lexema]);
+                this.listaTokens.push(['tkBreak', lexema]);
                 break;
 
             case "continue":
                 this.listaLexemas.push([this.fila, this.columna, 'tkContinue', lexema]);
+                this.listaTokens.push(['tkContinue', lexema]);
                 break;
 
             case "return":
                 this.listaLexemas.push([this.fila, this.columna, 'tkReturn', lexema]);
+                this.listaTokens.push(['tkReturn', lexema]);
                 break;
 
             case "System":
                 this.listaLexemas.push([this.fila, this.columna, 'tkSystem', lexema]);
+                this.listaTokens.push(['tkSystem', lexema]);
                 break;
 
             case "out":
                 this.listaLexemas.push([this.fila, this.columna, 'tkOut', lexema]);
+                this.listaTokens.push(['tkOut', lexema]);
                 break;
 
             case "print":
                 this.listaLexemas.push([this.fila, this.columna, 'tkPrint', lexema]);
+                this.listaTokens.push(['tkPrint', lexema]);
                 break;
 
             case "println":
                 this.listaLexemas.push([this.fila, this.columna, 'tkPrintln', lexema]);
+                this.listaTokens.push(['tkPrintln', lexema]);
                 break;
         
             default:
                 this.listaLexemas.push([this.fila, this.columna, 'tkIdentificador', lexema]);
+                this.listaTokens.push(['tkIdentificador', lexema]);
                 break;
         }
     }
@@ -470,90 +510,110 @@ class scanner{
 
             case "(":
                 this.listaLexemas.push([this.fila, this.columna, 'tkParAbierta', lexema]);
+                this.listaTokens.push(['tkParAbierta', lexema]);
                 break;
 
             case ")":
                 this.listaLexemas.push([this.fila, this.columna, 'tkParCerrada', lexema]);
+                this.listaTokens.push(['tkParCerrada', lexema]);
                 break;
 
             case "{":
                 this.listaLexemas.push([this.fila, this.columna, 'tkLlaAbierta', lexema]);
+                this.listaTokens.push(['tkLlaAbierta', lexema]);
                 break;
 
             case "}":
                 this.listaLexemas.push([this.fila, this.columna, 'tkLlaCerrada', lexema]);
+                this.listaTokens.push(['tkLlaCerrada', lexema]);
                 break;
 
             case "[":
                 this.listaLexemas.push([this.fila, this.columna, 'tkCorAbierta', lexema]);
+                this.listaTokens.push(['tkCorAbierta', lexema]);
                 break;
                 
             case "]":
                 this.listaLexemas.push([this.fila, this.columna, 'tkCorCerrada', lexema]);
+                this.listaTokens.push(['tkCorCerrada', lexema]);
                 break;
 
             case "&":
                 this.listaLexemas.push([this.fila, this.columna, 'tkAmperson', lexema]);
+                this.listaTokens.push(['tkAmperson', lexema]);
                 break;
 
             case "|":
                 this.listaLexemas.push([this.fila, this.columna, 'tkBarVertical', lexema]);
+                this.listaTokens.push(['tkBarVertical', lexema]);
                 break;
             
             case "^":
                 this.listaLexemas.push([this.fila, this.columna, 'tkXor', lexema]);
+                this.listaTokens.push(['tkXor', lexema]);
                 break;
                 
             case ">":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMayor', lexema]);
+                this.listaTokens.push(['tkMayor', lexema]);
                 break;
 
             case "<":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMenor', lexema]);
+                this.listaTokens.push(['tkMenor', lexema]);
                 break;
 
             case "!":
                 this.listaLexemas.push([this.fila, this.columna, 'tkAdmiracion', lexema]);
+                this.listaTokens.push(['tkAdmiracion', lexema]);
                 break;
 
             case "+":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMas', lexema]);
+                this.listaTokens.push(['tkMas', lexema]);
                 break;
                 
             case "-":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMenos', lexema]);
+                this.listaTokens.push(['tkMenos', lexema]);
                 break;
 
             case "*":
                 this.listaLexemas.push([this.fila, this.columna, 'tkMulti', lexema]);
+                this.listaTokens.push(['tkMulti', lexema]);
                 break;
 
             case "/":
                 this.listaLexemas.push([this.fila, this.columna, 'tkDiv', lexema]);
+                this.listaTokens.push(['tkDiv', lexema]);
                 break;
 
             case "=":
                 this.listaLexemas.push([this.fila, this.columna, 'tkIgual', lexema]);
+                this.listaTokens.push(['tkIgual', lexema]);
                 break;
                 
             case ".":
                 this.listaLexemas.push([this.fila, this.columna, 'tkPunto', lexema]);
+                this.listaTokens.push(['tkPunto', lexema]);
                 break;
 
             case ",":
                 this.listaLexemas.push([this.fila, this.columna, 'tkComa', lexema]);
+                this.listaTokens.push(['tkComa', lexema]);
                 break;
 
             case ":":
                 this.listaLexemas.push([this.fila, this.columna, 'tkDosPuntos', lexema]);
+                this.listaTokens.push(['tkDosPuntos', lexema]);
                 break;
             case ";":
                 this.listaLexemas.push([this.fila, this.columna, 'tkPuntoComa', lexema]);
+                this.listaTokens.push(['tkPuntoComa', lexema]);
                 break;
         }
     }
 
 }
 
-var test = new scanner();
-test.analizar("hola ajs@fdklj");
+module.exports = scanner;
