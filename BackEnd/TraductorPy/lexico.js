@@ -26,17 +26,17 @@ class scanner{
                         lexema += ch;
                         this.fila++;
                         this.columna = 1;
-                        this.listaLexemas.push([this.fila, this.columna, 'tkSaltoLinea', lexema]);
+                        //this.listaLexemas.push([this.fila, this.columna, 'tkSaltoLinea', lexema]);
                         //this.listaTokens.push(['tkSaltoLinea', lexema]);
                         lexema = "";
                     }else if(ch.charCodeAt(0) == 32 || ch.charCodeAt(0) == 9){
                         this.columna++;
                         if(ch.charCodeAt(0) == 32){ // Espacio
-                            this.listaLexemas.push([this.fila, this.columna, 'tkEspacio', ch]);
+                            //this.listaLexemas.push([this.fila, this.columna, 'tkEspacio', ch]);
                             //this.listaTokens.push(['tkEspacio', ch]);
                         }
                         if(ch.charCodeAt(0) == 9){ // Tabulacion
-                            this.listaLexemas.push([this.fila, this.columna, 'tkTab', ch]);
+                            //this.listaLexemas.push([this.fila, this.columna, 'tkTab', ch]);
                             //this.listaTokens.push(['tkTab', ch]);
                         }
                     }else if(this.esNumero(ch)){
@@ -274,8 +274,8 @@ class scanner{
                 case 15:
                     this.columna++;
                     if(ch == '\n'){
-                        this.listaLexemas.push([this.fila, this.columna, 'tkComentario', lexema]);
-                        this.listaTokens.push(['tkComentario', lexema]);
+                        //this.listaLexemas.push([this.fila, this.columna, 'tkComentario', lexema]);
+                        //this.listaTokens.push(['tkComentario', lexema]);
                         lexema = "";
                         estado = 0;
                         this.columna--;
@@ -315,8 +315,8 @@ class scanner{
 
                 // Estado 18
                 case 18:
-                    this.listaLexemas.push([this.fila, this.columna, 'tkComentarioMulti', lexema]);
-                    this.listaTokens.push(['tkComentarioMulti', lexema]);
+                    //this.listaLexemas.push([this.fila, this.columna, 'tkComentarioMulti', lexema]);
+                    //this.listaTokens.push(['tkComentarioMulti', lexema]);
                     lexema = "";
                     estado = 0;
                     this.columna--;
@@ -338,8 +338,8 @@ class scanner{
             i++;
         }
        // console.log(this.listaLexemas);
-        console.log("-------------------");
-        console.log(this.listaErrorLexico);
+        //console.log("-------------------");
+        //console.log(this.listaErrorLexico);
     }
 
     getListaTokens(){

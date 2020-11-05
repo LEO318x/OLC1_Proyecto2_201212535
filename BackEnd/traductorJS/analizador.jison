@@ -268,7 +268,7 @@ SINTAXISVARIABLE
 *                                     *
 *-------------------------------------*/
 MAIN
-    : tk_public tk_static tk_void tk_main tk_para tk_String tk_cora tk_corc tk_identificador tk_parc tk_llaa INSTRUCCIONES tk_llac {$$=`function main(${$9}){\n${$12}\n}`;}
+    : tk_public tk_static tk_void tk_main tk_para tk_String tk_cora tk_corc tk_identificador tk_parc tk_llaa INSTRUCCIONES tk_llac {$$=`\nfunction main(${$9}){\n${$12}\n}`;}
     | ERROR2 tk_llac {$$=``;}
     ;
 
@@ -279,7 +279,7 @@ MAIN
 *                                     *
 *-------------------------------------*/
 FUNCIONES
-    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_llaa INSTRUCCIONES tk_llac   {$$=`function ${$3}(${$5}){\n${$8}\n}\n`;}
+    : tk_public TIPORETORNO tk_identificador tk_para PARAMETROS tk_parc tk_llaa INSTRUCCIONES tk_llac   {$$=`\nfunction ${$3}(${$5}){\n${$8}\n}\n`;}
     ;
 
 
@@ -349,20 +349,20 @@ LISTAINSTRUCCIONES
     ;
 
 LISTAINSTRUCCIONESSINTAXIS
-    : VARIABLES                                                                                             {$$=`${$1}`;}
-    | ASIGNACIONVAR                                                                                         {$$=`${$1}`;}
-    | IF                                                                                                    {$$=`${$1}`;}
-    | FOR                                                                                                   {$$=`${$1}`;}
-    | WHILE                                                                                                 {$$=`${$1}`;}
-    | DOWHILE                                                                                               {$$=`${$1}`;}
-    | tk_break tk_puntocoma                                                                                 {$$=`${$1} ${$2};`;}
-    | tk_continue tk_puntocoma                                                                              {$$=`${$1} ${$2};`;}
-    | tk_return EXP tk_puntocoma                                                                            {$$=`${$1} ${$2};`;}
-    | tk_identificador tk_para LISTAPARAMETROS2 tk_parc tk_puntocoma                                        {$$=`${$1} (${$3});`;}
-    | tk_system tk_punto tk_out tk_punto tk_println tk_para PRINT tk_parc tk_puntocoma                      {$$=`console.log(${$7});`;}
-    | tk_system tk_punto tk_out tk_punto tk_print tk_para PRINT tk_parc tk_puntocoma                        {$$=`console.log(${$7});`;}
-    | tk_identificador tk_mas tk_mas tk_puntocoma                                                           {$$=`\n${$1}++;`;}
-    | tk_identificador tk_menos tk_menos tk_puntocoma                                                       {$$=`\n${$1}--;`;}
+    : VARIABLES                                                                                             {$$=`${$1}\n`;}
+    | ASIGNACIONVAR                                                                                         {$$=`${$1}\n`;}
+    | IF                                                                                                    {$$=`${$1}\n`;}
+    | FOR                                                                                                   {$$=`${$1}\n`;}
+    | WHILE                                                                                                 {$$=`${$1}\n`;}
+    | DOWHILE                                                                                               {$$=`${$1}\n`;}
+    | tk_break tk_puntocoma                                                                                 {$$=`${$1} ${$2};\n`;}
+    | tk_continue tk_puntocoma                                                                              {$$=`${$1} ${$2};\n`;}
+    | tk_return EXP tk_puntocoma                                                                            {$$=`${$1} ${$2};\n`;}
+    | tk_identificador tk_para LISTAPARAMETROS2 tk_parc tk_puntocoma                                        {$$=`${$1} (${$3});\n`;}
+    | tk_system tk_punto tk_out tk_punto tk_println tk_para PRINT tk_parc tk_puntocoma                      {$$=`console.log(${$7});\n`;}
+    | tk_system tk_punto tk_out tk_punto tk_print tk_para PRINT tk_parc tk_puntocoma                        {$$=`console.log(${$7});\n`;}
+    | tk_identificador tk_mas tk_mas tk_puntocoma                                                           {$$=`\n${$1}++;\n`;}
+    | tk_identificador tk_menos tk_menos tk_puntocoma                                                       {$$=`\n${$1}--;\n`;}
     ;
 
 PRINT
