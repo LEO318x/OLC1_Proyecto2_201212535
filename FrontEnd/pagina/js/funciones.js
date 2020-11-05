@@ -47,3 +47,25 @@ function descargarArchivoTraduccionJS(datos, nombreArchivo, type) {
         }, 0); 
     }
 }
+
+function descargarArchivoTraduccionPY(datos, nombreArchivo, type) {
+    var hoy = new Date();
+    var fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear();
+    var hora = hoy.getHours() + '-' + hoy.getMinutes() + '-' + hoy.getSeconds();
+    var fechaYHora = fecha + '_' + hora;
+    var file = new Blob([datos], {type: type});
+    if (window.navigator.msSaveOrOpenBlob)
+        window.navigator.msSaveOrOpenBlob(file, nombreArchivo+'__'+fechaYHora+'.py');
+    else { 
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = nombreArchivo+'__'+fechaYHora+'.py';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}

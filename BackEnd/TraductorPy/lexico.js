@@ -327,7 +327,7 @@ class scanner{
                 case 888:
                     this.columna++;
                     lexema += ch;
-                    this.listaErrorLexico.push([this.fila, this.columna, 'tkError', lexema]);
+                    this.listaErrorLexico.push([this.fila, this.columna, lexema, 'tkError']);
                     lexema = "";
                     estado = 0;
                     break;
@@ -344,6 +344,14 @@ class scanner{
 
     getListaTokens(){
         return this.listaTokens;
+    }
+
+    getListaLexemas(){
+        return this.listaLexemas;
+    }
+
+    getListaErrorLexico(){
+        return this.listaErrorLexico;
     }
 
     esNumero(ch){

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon traductorJS/api.js"
+    "dev": "nodemon traductorJS/api.js",
+    "dev2": "nodemon traductorPY/api.js"
   },
   "keywords": [],
   "author": "",

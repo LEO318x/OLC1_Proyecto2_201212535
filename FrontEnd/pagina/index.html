@@ -39,17 +39,17 @@
                                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Archivo</a>
                                   <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#"><input type="file" id="abrirArchivo" name="abrirArchivo" onchange="readFiles(event); this.value=null; return false;"/>Abrir</a>
-                                    <a class="dropdown-item" href="#">Nuevo</a>
+                                    <!-- <a class="dropdown-item" href="#">Nuevo</a> -->
                                     <a class="dropdown-item" href="#" onclick="guardarArchivo();">Guardar</a>
-                                    <a class="dropdown-item" href="#">Guardar Como</a>
+                                    <!-- <a class="dropdown-item" href="#">Guardar Como</a> -->
                                   </div>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Descargar</a>
                                     <div class="dropdown-menu">
                                       <a class="dropdown-item" href="#" onclick="descargarArchivoTraduccionJS(traduccionJS, generarNombre(10), 'text/javascript');">Javascript</a>
-                                      <a class="dropdown-item" href="#">Python</a>
-                                      <a class="dropdown-item" href="#">Ambos</a>
+                                      <a class="dropdown-item" href="#" onclick="descargarArchivoTraduccionPY(traduccionPY, generarNombre(10), 'text/python');">Python</a>
+                                      <a class="dropdown-item" href="#" onclick="descargarArchivoTraduccionJS(traduccionJS, generarNombre(10), 'text/javascript'); descargarArchivoTraduccionPY(traduccionPY, generarNombre(10), 'text/python');">Ambos</a>
                                     </div>
                                 </li>
                               </ul>
@@ -155,6 +155,44 @@
                     </div>
                   </div>
                 </div>
+                <!-- Modal Errores PY-->
+                <div class="modal fade" id="reporteTablaPY" tabindex="-1" aria-labelledby="reporteTablaPYLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reporteTablaPYLabel">Tabla Errores Léxicos/Sintácticos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="cuerpoReporteModalPY"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal Tokens PY-->
+                <div class="modal fade" id="reporteTablaTokensPY" tabindex="-1" aria-labelledby="reporteTablaTokensPYLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reporteTablaTokensPYLabel">Tabla Tokens</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="cuerpoReporteTokensPYModal"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
@@ -226,12 +264,27 @@
           $("#consolaJS").empty();
           $("#consolaPY").empty();
           $("#cuerpoReporteModal").empty();
+          $("#cuerpoReporteModalPY").empty();
           $("#cuerpoReporteTokensJSModal").empty();
+          $("#cuerpoReporteTokensPYModal").empty();
           //console.log(texto);
 
           var datos = texto;
           //e.preventDefault();
-        $.ajax(
+
+          /**
+           * 
+           * 
+           * 
+           * 
+           * ----------------- JAVASCRIPT
+           * 
+           * 
+           * 
+           * 
+          */
+         
+          $.ajax(
         {
           url : './traducirjs',
           type: 'POST',
@@ -282,6 +335,78 @@
             console.log(traduccionJS); 
 
             graficarArbol(datosArbol);
+            
+          })
+          .fail(function(data) {
+          //Error
+          })
+          .always(function(data) {
+          // alert( "complete" );
+          });
+        
+          /**
+           * 
+           * 
+           * 
+           * 
+           * ----------------- PYTHON
+           * 
+           * 
+           * 
+           * 
+          */
+
+          $.ajax(
+        {
+          url : './traducirpy',
+          type: 'POST',
+          data: {data: datos},
+        })
+          .done(function(data) {
+            listaTokensPY = data[0];
+            erroresLexicosPY = data[1];
+            erroresSintacticosPY = data[2];
+            traduccionPY = data[3].listaTraduccion;
+            datosArbolPY = data[4];
+
+            /*for(i = 0; i < listaTokens.listaTokens.length; i++){
+              console.log(listaTokens.listaTokens[i]);
+            }*/
+            var cAuxTPY = 1;
+            var cAuxPY = 1;
+            var consolaPY = "";
+            var tablaTokensPY = "<table id=\"tablaTokensPY\" class=\"table table-striped table-hover table-sm table-bordered\">";
+                tablaTokensPY+= "<thead><tr><th>#</th><th>Fila</th><th>Columna</th><th>Tipo</th><th>Descripción</th></tr></thead><tbody>";
+            
+            for (let i = 0; i < listaTokensPY.listaTokens.length; i++) {
+              tablaTokensPY += `<tr><th scope="row">${cAuxTPY}</th><td>${listaTokensPY.listaTokens[i][0]}</td><td>${listaTokensPY.listaTokens[i][1]}</td><td>${listaTokensPY.listaTokens[i][2]}</td><td>${listaTokensPY.listaTokens[i][3]}</td></tr>`;
+              cAuxTPY++;
+            }              
+            tablaTokensPY += "</tbody></table>";
+            $("#cuerpoReporteTokensPYModal").append(tablaTokensPY);
+
+            var tablaReporteErroresPY = "<table id=\"tablaErrorLexicoSintactico\" class=\"table table-striped table-hover table-sm table-bordered\">";
+              tablaReporteErroresPY+= "<thead><tr><th>#</th><th>Tipo Error</th><th>Fila</th><th>Columna</th><th>Descripción</th></tr></thead><tbody>";
+              consolaPY += "*-----↓ERRORES LÉXICOS↓-----*\n";
+            for (let i = 0; i < erroresLexicosPY.listaErroresLexicos.length; i++) {
+              consolaPY += "Fila: " + erroresLexicosPY.listaErroresLexicos[i][0]+"   Columna: "+ erroresLexicosPY.listaErroresLexicos[i][1] + "   Error: " + erroresLexicosPY.listaErroresLexicos[i][2]+"\n";
+              tablaReporteErroresPY += `<tr><th scope="row">${cAux}</th><td>Léxico</td><td>${erroresLexicosPY.listaErroresLexicos[i][0]}</td><td>${erroresLexicosPY.listaErroresLexicos[i][1]}</td><td>${erroresLexicosPY.listaErroresLexicos[i][2]}</td></tr>`;
+              cAuxPY++;
+            }           
+            
+            consolaPY +="\n*-----↓ERRORES SINTÁCTICOS↓-----*\n";
+            for (let i = 0; i < erroresSintacticosPY.listaErroresSintacticos.length; i++) {
+              consolaPY += "Fila: " + erroresSintacticosPY.listaErroresSintacticos[i][0]+ "   Error: " + erroresSintacticosPY.listaErroresSintacticos[i][2]+"\n";
+              tablaReporteErroresPY += `<tr><th scope="row">${cAux}</th><td>Sintáctico</td><td>${erroresSintacticosPY.listaErroresSintacticos[i][0]}</td><td>${erroresSintacticosPY.listaErroresSintacticos[i][1]}</td><td>${erroresSintacticosPY.listaErroresSintacticos[i][2]}</td></tr>`;
+              cAuxPY++;
+            }
+            
+            tablaReporteErroresPY += "</tbody></table>";
+            $("#consolaPY").append(consolaPY);
+            $("#cuerpoReporteModalPY").append(tablaReporteErroresPY);
+            //console.log(traduccionPY); 
+
+            //graficarArbol(datosArbol);
             
           })
           .fail(function(data) {

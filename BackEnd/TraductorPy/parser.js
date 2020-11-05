@@ -3,26 +3,32 @@ class parser{
         this.listaTokens = listaTokens;
         this.columna = 1;
         this.listaLexemas = [];
-        this.tamanioLista = listaTokens.length;
+        this.tamanioLista = (listaTokens.length);
+        console.log(this.tamanioLista);
         this.pos = 0;
         this.tokenPreanalisis = listaTokens[0][0];
+        //this.listaTraduccion = [];
+        this.traduccion = "";
         console.log(this.listaTokens);
     }
 
     parea(token){
-
-            if(token != this.tokenPreanalisis){
-                console.log('error '+ token + ' pre ' + this.tokenPreanalisis);
-            }
-            if(this.pos < this.tamanioLista){
-                console.log(token + '<--->' + this.tokenPreanalisis + ' <---> ' + this.listaTokens[this.pos][1]);
-                this.pos++;
-                this.tokenPreanalisis = this.listaTokens[this.pos][0];
-            }        
+        if(token != this.tokenPreanalisis){
+            console.log('error '+ token + ' pre ' + this.tokenPreanalisis);
+        }
+        if(this.pos < this.tamanioLista){
+            console.log(token + '<--->' + this.tokenPreanalisis + ' <---> ' + this.listaTokens[this.pos][1]);
+            this.pos++;
+            this.tokenPreanalisis = this.listaTokens[this.pos][0];
+        }            
     }
 
     inicio(){
-        this.TODO();
+        try {
+            this.TODO();
+        } catch (error) {
+            
+        }
     }
 
     TODO(){
@@ -48,13 +54,17 @@ class parser{
         this.parea('tkPublic');
         if(this.listaTokens[this.pos][0] == 'tkClass'){
             this.parea('tkClass');
+            this.traduccion += "class ";
             this.parea('tkIdentificador');
+            this.traduccion += this.listaTokens[this.pos-1][1]+":";
             this.parea('tkLlaAbierta');
             this.TODOCLASE();
             this.parea('tkLlaCerrada');
-        }else if(this.listaTokens[this.pos][0] == 'tkInterface'){
+        }else if(this.listaTokens[this.pos][0] == 'tkInterface'){            
             this.parea('tkInterface');
+            this.traduccion += "class ";
             this.parea('tkIdentificador');
+            this.traduccion += this.listaTokens[this.pos-1][1]+":";
             this.parea('tkLlaAbierta');
             this.TODOINTERFACE();
             this.parea('tkLlaCerrada');
@@ -112,6 +122,7 @@ class parser{
                 this.TIPORETORNO();
                 if(this.listaTokens[this.pos][0] == 'tkIdentificador'){
                     this.parea('tkIdentificador');
+                    this.traduccion += "defX " + this.listaTokens[this.pos-1][1];
                     this.FUNCIONESMETODOS();
                 }
             }   
@@ -134,9 +145,12 @@ class parser{
         this.parea('tkPublic');
         this.TIPORETORNO();
         this.parea('tkIdentificador');
+        this.traduccion += "self " + this.listaTokens[this.pos-1][1];
         this.parea('tkParAbierta');
+        this.traduccion += "(";
         this.PARAMETROS();
         this.parea('tkParCerrada');
+        this.traduccion += ")";
         this.parea('tkPuntoComa');
     }
 
@@ -153,7 +167,9 @@ class parser{
 
     ASIGNACIONVAR(){
             this.parea('tkIdentificador');
+            this.traduccion += "var "+this.listaTokens[this.pos-1][1];
             this.parea('tkIgual');
+            this.traduccion += " = "+this.listaTokens[this.pos-1][1];
             this.EXP();
             this.parea('tkPuntoComa');        
     }
@@ -167,9 +183,11 @@ class parser{
         if(this.listaTokens[this.pos][0] == 'tkIdentificador'){
             this.SINTAXISVARIABLE()
             this.parea('tkComa');
+            this.traduccion += ", ";
             this.LISTAVARIABLESP();
         }else if(this.listaTokens[this.pos][0] == 'tkComa'){
             this.parea('tkComa');
+            this.traduccion += ", ";
             this.SINTAXISVARIABLE()
             this.LISTAVARIABLESP();
         }
@@ -177,8 +195,10 @@ class parser{
 
     SINTAXISVARIABLE(){
         this.parea('tkIdentificador');
+        this.traduccion += this.listaTokens[this.pos-1][1];
         if(this.listaTokens[this.pos][0] == 'tkIgual'){
             this.parea('tkIgual');
+            this.traduccion += " = ";
             this.EXP();
         }
     }
@@ -274,6 +294,7 @@ class parser{
             || this.listaTokens[this.pos][0] == 'tkVoid'){
                 this.TIPO();
                 this.parea('tkIdentificador');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1];
                 this.PARAMETROSP();
             }
         
@@ -282,8 +303,10 @@ class parser{
     PARAMETROSP(){
         if(this.listaTokens[this.pos][0] == 'tkComa'){
             this.parea('tkComa');
+            this.traduccion += ", ";
             this.TIPO();
             this.parea('tkIdentificador');
+            this.traduccion += " "+this.listaTokens[this.pos-1][1];
             this.PARAMETROSP();
         }
         
@@ -297,6 +320,7 @@ class parser{
     LISTAPARAMETROSP(){
         if(this.listaTokens[this.pos][0] == 'tkComa'){
             this.parea('tkComa');
+            this.traduccion += ", ";
             this.EXP();
             this.LISTAPARAMETROSP();
         }
@@ -310,6 +334,7 @@ class parser{
     LISTAPARAMETROS2P(){
         if(this.listaTokens[this.pos][0] == 'tkComa'){
             this.parea('tkComa');
+            this.traduccion += ", ";
             this.EXP();
             this.LISTAPARAMETROS2P();
         }
@@ -531,11 +556,15 @@ class parser{
             || this.listaTokens[this.pos][0] == 'tkChar'
             || this.listaTokens[this.pos][0] == 'tkBoolean'
             || this.listaTokens[this.pos][0] == 'tkVoid'){
-                this.TIPO();  
+                this.TIPO(); 
+                this.traduccion += " var "; 
             }
+            
             this.parea('tkIdentificador');
+            this.traduccion += this.listaTokens[this.pos-1][1];
             if(this.listaTokens[this.pos][0] == 'tkIgual'){
-                this.parea('tkIgual');
+                this.parea('tkIgual');                
+                this.traduccion += " = ";
                 this.EXP();
             }
     }
@@ -548,24 +577,31 @@ class parser{
     EXP(){
         if(this.listaTokens[this.pos][0] == 'tkIdentificador'){
             this.parea('tkIdentificador');
+            this.traduccion += this.listaTokens[this.pos-1][1];            
             if(this.listaTokens[this.pos][0] == 'tkParAbierta'){
                 this.parea('tkParAbierta');
+                this.traduccion += "(";
                 this.LISTAPARAMETROS();
                 this.parea('tkParCerrada');
+                this.traduccion += ")";
             }
             this.EXPP();           
         }else if(this.listaTokens[this.pos][0] == 'tkAdmiracion'){
             this.parea('tkAdmiracion')
+            this.traduccion += "!";
             this.EXP();
             this.EXPP();
         }else if(this.listaTokens[this.pos][0] == 'tkMenos'){
             this.parea('tkMenos');
+            this.traduccion += "-";
             this.EXP();
             this.EXPP();
         }else if(this.listaTokens[this.pos][0] == 'tkParAbierta'){
             this.parea('tkParAbierta');
+            this.traduccion += "(";
             this.EXP();
             this.parea('tkParCerrada');
+            this.traduccion += ")";
             this.EXPP();
         }else{
             this.VAL();
@@ -577,54 +613,68 @@ class parser{
     EXPP(){
         if(this.listaTokens[this.pos][0] == 'tkAnd'){
             this.parea('tkAnd');
+            this.traduccion += " and ";
             this.EXP()
         }
         if(this.listaTokens[this.pos][0] == 'tkOr'){
             this.parea('tkOr');
+            this.traduccion += " or ";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkXor'){
             this.parea('tkXor');
+            this.traduccion += " xor ";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkMenor'){
             this.parea('tkMenor');
+            this.traduccion += "<";
             if(this.listaTokens[this.pos][0] == 'tkIgual'){
                 this.parea('tkIgual');
+                this.traduccion += "=";
             }
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkMayor'){
             this.parea('tkMayor');
+            this.traduccion += ">";
             if(this.listaTokens[this.pos][0] == 'tkIgual'){
                 this.parea('tkIgual');
+                this.traduccion += "=";
             }
+
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkIgual'){
             this.parea('tkIgual');            
-            this.parea('tkIgual');            
+            this.parea('tkIgual');
+            this.traduccion += "==";            
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkMas'){
             this.parea('tkMas');
+            this.traduccion += "+";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkMenos'){
             this.parea('tkMenos');
+            this.traduccion += "-";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkDiv'){
             this.parea('tkDiv');
+            this.traduccion += "/";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkMulti'){
             this.parea('tkMulti');
+            this.traduccion += "*";
             this.EXP();
         }
         if(this.listaTokens[this.pos][0] == 'tkAdmiracion'){
             this.parea('tkAdmiracion');
             this.parea('tkIgual');
+            this.traduccion += "!=";
             this.EXP();
         }
 
@@ -634,28 +684,39 @@ class parser{
         switch (this.listaTokens[this.pos][0]) {
             case 'tkIdentificador':
                 this.parea('tkIdentificador');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkNumero':
                 this.parea('tkNumero');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkDecimal':
                 this.parea('tkDecimal');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkCadena':
                 this.parea('tkCadena');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkCadenaSimple':
                 this.parea('tkCadenaSimple');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkTrue':
                 this.parea('tkTrue');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             case 'tkFalse':
                 this.parea('tkFalse');
+                this.traduccion += " "+this.listaTokens[this.pos-1][1]
                 break;
             default:
                 break;
         }
+    }
+
+    getTraduccion(){
+        return this.traduccion;
     }
  
 }
