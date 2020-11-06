@@ -1,11 +1,12 @@
 /* Importaciones  */
 %{
-let lisErrorLexico = [], lisErrorSintactico = [], lisTokens = [], lisTraduccion = [];
+let lisErrorLexico = [], lisErrorSintactico = [], lisTokens = [], lisTraduccion = [], auxComents = "";
 exports.LimpiarListas = function(){
         lisErrorLexico = [];
         lisErrorSintactico = [];
         lisTokens = [];
         lisTraduccion = [];
+        auxComents = "";
     }
 %}
 
@@ -25,10 +26,10 @@ exports.LimpiarListas = function(){
 ****************************************/
 
 //Comentario Unilínea
-"//".*  {}
+"//".*  {auxComents += "\n" + yytext + "\n";}
 
 //Comentario Multilínea
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {}
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {auxComents += "\n" + yytext + "\n";}
 
 /***************************************
 *                                      *
@@ -173,7 +174,7 @@ exports.LimpiarListas = function(){
 
 %%
 INICIO
-    : TODO EOF                     {/*console.log('----------------'); console.log(lisTokens); console.log('#----------------#');*/ return [{listaTokens: lisTokens}, {listaErroresLexicos: lisErrorLexico}, {listaErroresSintacticos: lisErrorSintactico}, {listaTraduccion: $1}];} 
+    : TODO EOF                     {/*console.log('----------------'); console.log(lisTokens); console.log('#----------------#');*/ return [{listaTokens: lisTokens}, {listaErroresLexicos: lisErrorLexico}, {listaErroresSintacticos: lisErrorSintactico}, {listaTraduccion: $1+auxComents}];} 
     ;
 
 TODO

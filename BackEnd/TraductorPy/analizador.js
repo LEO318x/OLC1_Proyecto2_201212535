@@ -9,7 +9,7 @@ class analizador{
         
         var sintactico = new parser(lexico.getListaTokens());
         sintactico.inicio();
-        console.log(sintactico.getTraduccion());
+        //console.log(sintactico.getTraduccion());
         
         return [{listaTokens: lexico.getListaLexemas()}, {listaErroresLexicos: lexico.getListaErrorLexico()}, {listaErroresSintacticos: []}, {listaTraduccion: sintactico.getTraduccion()}];
     }
