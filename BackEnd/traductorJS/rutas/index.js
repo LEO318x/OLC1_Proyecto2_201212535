@@ -17,7 +17,7 @@ router.post('/traducirjs', (req, res) =>{
         analizador.LimpiarListas();
         
         analisisArbol = new analizadorArbol.parse(textoAnalizar);
-        //console.log(analisis.concat(analisisArbol));
+        //console.log(analisisArbol);
         res.send(analisis.concat(analisisArbol));       
       } catch (error) {
         console.error(error);

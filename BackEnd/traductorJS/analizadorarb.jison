@@ -168,7 +168,7 @@ let arbolJSON;
 
 %%
 INICIO
-    : TODO EOF                     { /*console.log($1);*/ /*return { name: 'RAIZ', children: $1 };*/ arbolJSON = { name: 'RAIZ', children: $1 }; } 
+    : TODO EOF                     { /*console.log($1);*/ /*return { name: 'RAIZ', children: $1 };*/ return arbolJSON = { name: 'RAIZ', children: $1 }; } 
     ;
 
 TODO
@@ -184,7 +184,7 @@ INSTRUCCIONESTODO
 LISTASINTAXIS
     : SINTAXISCLASE                         {$$=[{name: 'SINTAXISCLASE', children: $1}];}
     | SINTAXISINTERFACE                     {$$=[{name: 'SINTAXISINTERFACE', children: $1}];}
-    | ERROR2
+    | ERROR2                                {$$=[{name: 'ERROR'}];}
     ;
 
 /*------------------------------------*
@@ -239,7 +239,7 @@ TODOINTERFACELISTA
 *-------------------------------------*/
 VARIABLES 
 	: TIPO LISTAVARIABLES tk_puntocoma      {$$=[{name: 'TIPO', children: $1},{name: 'LISTAVARIABLES', children: $2}];}
-    | ERROR2 tk_puntocoma                   //{$$=``;}
+    | ERROR2 tk_puntocoma                   {$$=[{name: 'ERROR'}];}
     ;
 
 ASIGNACIONVAR

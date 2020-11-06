@@ -324,7 +324,7 @@ PARAMETROS
 
 LISTAPARAMETROS
     : EXP                                               {$$ = `${$1}`;}
-    | LISTAPARAMETROS tk_coma EXP                       {$$ = `${$},${$3}`;}
+    | LISTAPARAMETROS tk_coma EXP                       {$$ = `${$1},${$3}`;}
     ;
 
 LISTAPARAMETROS2

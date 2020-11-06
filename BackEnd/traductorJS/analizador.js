@@ -125,10 +125,7 @@ break;
 case 45: case 50:
 this.$ = ``;
 break;
-case 47:
-this.$ = `${$},${$$[$0]}`;
-break;
-case 49:
+case 47: case 49:
 this.$ = `${$$[$0-2]},${$$[$0]}`;
 break;
 case 53:
